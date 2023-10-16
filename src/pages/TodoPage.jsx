@@ -1,4 +1,5 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { useState } from 'react';
 
 const dummyTodos = [
   {
@@ -24,12 +25,73 @@ const dummyTodos = [
 ];
 
 const TodoPage = () => {
+  // 新增變數 儲存使用者 input
+  const [inputValue, setInputValue] = useState('');
+  // 新增變數 儲存 todos 資料
+  const [todos, setTodos] = useState(dummyTodos);
+
+  // 將輸入的文字放入變數
+  const handleChange = (value) => {
+    setInputValue(value);
+  };
+
+  // 監聽點擊事件, 觸發新增 todos
+  const handleAddTodo = () => {
+    // 檢查 inputValue 是否有值
+    if (inputValue.length === 0) {
+      return;
+    }
+
+    // 當點擊事件發生時, 將inputValue 的值新增到 todos
+    setTodos((prevTodos) => {
+      return [
+        ...prevTodos,
+        {
+          id: Math.random() * 100,
+          title: inputValue,
+          isDone: false,
+        },
+      ];
+    });
+
+    // 將 inputValue 的值清空
+    setInputValue('');
+  };
+
+  // 監聽按鍵事件, 觸發新增 todos
+  const handleKeyDone = () => {
+    // 檢查 inputValue 是否有值
+    if (inputValue.length === 0) {
+      return;
+    }
+
+    // 按下 Enter 時, 將inputValue 的值新增到 todos
+    setTodos((prevTodos) => {
+      return [
+        ...prevTodos,
+        {
+          id: Math.random() * 100,
+          title: inputValue,
+          isDone: false,
+        },
+      ];
+    });
+
+    // 將 inputValue 的值清空
+    setInputValue('');
+  };
+
   return (
     <div>
       TodoPage
       <Header />
-      <TodoInput />
-      <TodoCollection todos={dummyTodos} />
+      <TodoInput
+        inputValue={inputValue}
+        onChange={handleChange}
+        onAddTodo={handleAddTodo}
+        onKeyDown={handleKeyDone}
+      />
+      <TodoCollection todos={todos} />
       <Footer />
     </div>
   );

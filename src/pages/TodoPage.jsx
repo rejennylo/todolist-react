@@ -81,6 +81,23 @@ const TodoPage = () => {
     setInputValue('');
   };
 
+  // 監聽點擊事件, 觸發 isDone 改變, 進而修改樣式
+  const handleTaggleDone = (id) => {
+    setTodos((prevtodos) => {
+      // 查看所有的 todo
+      return prevtodos.map((todo) => {
+        // 如果 todo id 和 props 傳入的 id 相同, 則反轉 isDone 當前值
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isDone: !todo.isDone,
+          };
+        }
+        return todo;
+      });
+    });
+  };
+
   return (
     <div>
       TodoPage
@@ -91,7 +108,7 @@ const TodoPage = () => {
         onAddTodo={handleAddTodo}
         onKeyDown={handleKeyDone}
       />
-      <TodoCollection todos={todos} />
+      <TodoCollection todos={todos} onTaggleDone={handleTaggleDone} />
       <Footer />
     </div>
   );

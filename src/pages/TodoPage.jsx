@@ -1,5 +1,6 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getTodos } from '../api/todos';
 
 const dummyTodos = [
   {
@@ -140,6 +141,19 @@ const TodoPage = () => {
       return prevTodos.filter((todo) => todo.id !== id);
     });
   };
+
+  // 從資料庫取得 todos 進行初次渲染
+  useEffect(() => {
+    const getTodosAsync = async () => {
+      try {
+        const todos = await getTodos();
+        setTodos(todos.map((todo) => ({ ...todo, isEdit: false })));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getTodosAsync();
+  }, []);
 
   return (
     <div>

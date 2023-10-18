@@ -30,6 +30,8 @@ const TodoPage = () => {
   // 新增變數 儲存 todos 資料
   const [todos, setTodos] = useState(dummyTodos);
 
+  const todoNums = todos.length;
+
   // 將輸入的文字放入變數
   const handleChange = (value) => {
     setInputValue(value);
@@ -156,7 +158,7 @@ const TodoPage = () => {
         onTaggleDone={handleTaggleDone}
         onChangeMode={handleChangeMode}
       />
-      <Footer />
+      <Footer todoNums={todoNums} />
     </div>
   );
 };

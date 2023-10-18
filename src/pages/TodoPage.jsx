@@ -98,6 +98,40 @@ const TodoPage = () => {
     });
   };
 
+  // 監聽雙點擊事件, 觸發 isEdit, 可修改 input
+  const handleChangeMode = ({ id, isEdit }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isEdit,
+          };
+        }
+        return {
+          ...todo,
+          isEdit: false,
+        };
+      });
+    });
+  };
+
+  // 更新 todo 狀態
+  const handleSave = ({ id, title }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            title: title,
+            isEdit: false,
+          };
+        }
+        return todo;
+      });
+    });
+  };
+
   return (
     <div>
       TodoPage
@@ -105,10 +139,15 @@ const TodoPage = () => {
       <TodoInput
         inputValue={inputValue}
         onChange={handleChange}
-        onAddTodo={handleAddTodo}
         onKeyDown={handleKeyDone}
+        onAddTodo={handleAddTodo}
       />
-      <TodoCollection todos={todos} onTaggleDone={handleTaggleDone} />
+      <TodoCollection
+        todos={todos}
+        onSave={handleSave}
+        onTaggleDone={handleTaggleDone}
+        onChangeMode={handleChangeMode}
+      />
       <Footer />
     </div>
   );

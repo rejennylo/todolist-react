@@ -132,6 +132,13 @@ const TodoPage = () => {
     });
   };
 
+  // 監聽點擊事件, 移除 todo
+  const handleDelete = ({ id }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
+    });
+  };
+
   return (
     <div>
       TodoPage
@@ -145,6 +152,7 @@ const TodoPage = () => {
       <TodoCollection
         todos={todos}
         onSave={handleSave}
+        onDelete={handleDelete}
         onTaggleDone={handleTaggleDone}
         onChangeMode={handleChangeMode}
       />

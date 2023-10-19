@@ -2,34 +2,11 @@ import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useState, useEffect } from 'react';
 import { getTodos } from '../api/todos';
 
-const dummyTodos = [
-  {
-    title: 'Learn react-router',
-    isDone: true,
-    id: 1,
-  },
-  {
-    title: 'Learn to create custom hooks',
-    isDone: false,
-    id: 2,
-  },
-  {
-    title: 'Learn to use context',
-    isDone: true,
-    id: 3,
-  },
-  {
-    title: 'Learn to implement auth',
-    isDone: false,
-    id: 4,
-  },
-];
-
 const TodoPage = () => {
   // 新增變數 儲存使用者 input
   const [inputValue, setInputValue] = useState('');
   // 新增變數 儲存 todos 資料
-  const [todos, setTodos] = useState(dummyTodos);
+  const [todos, setTodos] = useState([]);
 
   const todoNums = todos.length;
 

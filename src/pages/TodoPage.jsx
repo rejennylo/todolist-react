@@ -1,6 +1,6 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useState, useEffect } from 'react';
-import { getTodos } from '../api/todos';
+import { getTodos, createTodo } from '../api/todos';
 
 const TodoPage = () => {
   // 新增變數 儲存使用者 input
@@ -15,50 +15,58 @@ const TodoPage = () => {
     setInputValue(value);
   };
 
-  // 監聽點擊事件, 觸發新增 todos
-  const handleAddTodo = () => {
-    // 檢查 inputValue 是否有值
+  const handleAddTodo = async () => {
     if (inputValue.length === 0) {
       return;
     }
 
-    // 當點擊事件發生時, 將inputValue 的值新增到 todos
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false,
-        },
-      ];
-    });
+    try {
+      // 從 craateTodo 取得資料
+      const data = await createTodo({ title: inputValue, isDone: false });
 
-    // 將 inputValue 的值清空
-    setInputValue('');
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+            isEdit: false,
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  // 監聽按鍵事件, 觸發新增 todos
-  const handleKeyDone = () => {
-    // 檢查 inputValue 是否有值
+  const handleKeyDone = async () => {
     if (inputValue.length === 0) {
       return;
     }
 
-    // 按下 Enter 時, 將inputValue 的值新增到 todos
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false,
-        },
-      ];
-    });
+    try {
+      // 從 craateTodo 取得資料
+      const data = await createTodo({ title: inputValue, isDone: false });
 
-    // 將 inputValue 的值清空
-    setInputValue('');
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+            isEdit: false,
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 監聽點擊事件, 觸發 isDone 改變, 進而修改樣式

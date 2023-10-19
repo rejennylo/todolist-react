@@ -1,16 +1,13 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useState, useEffect } from 'react';
-import { getTodos, createTodo } from '../api/todos';
+import { getTodos, createTodo, patchTodo } from '../api/todos';
 
 const TodoPage = () => {
-  // 新增變數 儲存使用者 input
   const [inputValue, setInputValue] = useState('');
-  // 新增變數 儲存 todos 資料
   const [todos, setTodos] = useState([]);
 
   const todoNums = todos.length;
 
-  // 將輸入的文字放入變數
   const handleChange = (value) => {
     setInputValue(value);
   };
@@ -69,21 +66,30 @@ const TodoPage = () => {
     }
   };
 
-  // 監聽點擊事件, 觸發 isDone 改變, 進而修改樣式
-  const handleTaggleDone = (id) => {
-    setTodos((prevtodos) => {
-      // 查看所有的 todo
-      return prevtodos.map((todo) => {
-        // 如果 todo id 和 props 傳入的 id 相同, 則反轉 isDone 當前值
-        if (todo.id === id) {
-          return {
-            ...todo,
-            isDone: !todo.isDone,
-          };
-        }
-        return todo;
+  const handleTaggleDone = async (id) => {
+    // 比對 todos 找到當前這比 todo
+    const currentTodo = todos.find((todo) => todo.id === id);
+
+    try {
+      await patchTodo({
+        id,
+        isDone: !currentTodo.isDone,
       });
-    });
+
+      setTodos((prevtodos) => {
+        return prevtodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: !todo.isDone,
+            };
+          }
+          return todo;
+        });
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 監聽雙點擊事件, 觸發 isEdit, 可修改 input

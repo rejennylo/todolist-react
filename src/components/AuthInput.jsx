@@ -30,7 +30,7 @@ const AuthInput = ({ type, label, value, placeholder, onChange }) => {
         type={type || 'text'}
         value={value}
         placeholder={placeholder}
-        onChange={onChange}
+        onChange={(event)=>onChange?.(event.target.value)}
       />
     </StyledContainer>
   );

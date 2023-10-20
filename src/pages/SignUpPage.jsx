@@ -9,11 +9,14 @@ import { AuthInput } from 'components';
 import { useState } from 'react';
 import { register } from 'api/auth';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     if (username.length === 0) {
@@ -39,6 +42,7 @@ const SignUpPage = () => {
         showConfirmButton: false,
         timer: 1000,
       });
+      navigate('/todo');
       return;
     }
     Swal.fire({

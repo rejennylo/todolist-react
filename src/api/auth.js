@@ -31,12 +31,25 @@ export const register = async ({ username, email, password }) => {
     const { authToken } = data;
 
     console.log(data);
-    
+
     if (authToken) {
       return { success: true, ...data };
     }
     return data;
   } catch (error) {
     console.error('[Register Failed]: ', error);
+  }
+};
+
+export const checkPermission = async (authToken) => {
+  try {
+    const res = await axios.get(`${authURL}/test-token`, {
+      headers: {
+        Authorization: 'Bearer ' + authToken,
+      },
+    });
+    return res.data.success;
+  } catch (error) {
+    console.error('[Check Permisstion Failed]:', error);
   }
 };

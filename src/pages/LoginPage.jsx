@@ -6,8 +6,8 @@ import {
 } from 'components/common/auth.styled';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
-import { useState } from 'react';
-import { login } from 'api/auth';
+import { useEffect, useState } from 'react';
+import { checkPermission, login } from 'api/auth';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,10 +26,8 @@ const LoginPage = () => {
 
     const { success, authToken } = await login({ username, password });
 
-    // 如果登入成功, 將 token 儲存在 localStorage
     if (success) {
       localStorage.setItem('authToken', authToken);
-      //登入成功訊息
       Swal.fire({
         position: 'top',
         title: '登入成功',
@@ -40,7 +38,7 @@ const LoginPage = () => {
       navigate('/todo');
       return;
     }
-    //登入失敗訊息
+
     Swal.fire({
       position: 'top',
       title: '登入失敗',
@@ -49,6 +47,20 @@ const LoginPage = () => {
       timer: 1000,
     });
   };
+
+    useEffect(() => {
+      const checkTokenIsValid = async () => {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          return
+        }
+        const result = await checkPermission(authToken);
+        if (result) {
+          navigate('/todo');
+        }
+      };
+      checkTokenIsValid();
+    }, [navigate]);
 
   return (
     <AuthContainer>

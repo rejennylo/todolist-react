@@ -1,10 +1,13 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useState, useEffect } from 'react';
 import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos';
+import { useNavigate } from 'react-router-dom';
+import { checkPermission } from 'api/auth';
 
 const TodoPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [todos, setTodos] = useState([]);
+  const navigate = useNavigate();
 
   const todoNums = todos.length;
 
@@ -18,7 +21,6 @@ const TodoPage = () => {
     }
 
     try {
-      // 從 craateTodo 取得資料
       const data = await createTodo({ title: inputValue, isDone: false });
 
       setTodos((prevTodos) => {
@@ -45,7 +47,6 @@ const TodoPage = () => {
     }
 
     try {
-      // 從 craateTodo 取得資料
       const data = await createTodo({ title: inputValue, isDone: false });
 
       setTodos((prevTodos) => {
@@ -67,7 +68,6 @@ const TodoPage = () => {
   };
 
   const handleTaggleDone = async (id) => {
-    // 比對 todos 找到當前這比 todo
     const currentTodo = todos.find((todo) => todo.id === id);
 
     try {
@@ -92,7 +92,6 @@ const TodoPage = () => {
     }
   };
 
-  // 監聽雙點擊事件, 觸發 isEdit, 可修改 input
   const handleChangeMode = ({ id, isEdit }) => {
     setTodos((prevTodos) => {
       return prevTodos.map((todo) => {
@@ -110,7 +109,6 @@ const TodoPage = () => {
     });
   };
 
-  // 更新 todo 狀態
   const handleSave = ({ id, title }) => {
     setTodos((prevTodos) => {
       return prevTodos.map((todo) => {
@@ -137,7 +135,7 @@ const TodoPage = () => {
     }
   };
 
-  // 從資料庫取得 todos 進行初次渲染
+
   useEffect(() => {
     const getTodosAsync = async () => {
       try {
@@ -149,6 +147,20 @@ const TodoPage = () => {
     };
     getTodosAsync();
   }, []);
+
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        navigate('/login')
+      }
+      const result = await checkPermission(authToken);
+      if (!result) {
+        navigate('/login');
+      }
+    };
+    checkTokenIsValid();
+  }, [navigate]);
 
   return (
     <div>

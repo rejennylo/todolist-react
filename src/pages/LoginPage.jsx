@@ -78,7 +78,7 @@ const LoginPage = () => {
         />
       </AuthInputContainer>
       <AuthButton onClick={handleClick}>登入</AuthButton>
-      <AuthLinkText>註冊</AuthLinkText>
+      <AuthLinkText onClick={() => navigate('/signup')}>註冊</AuthLinkText>
     </AuthContainer>
   );
 };

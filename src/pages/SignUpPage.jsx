@@ -95,7 +95,7 @@ const SignUpPage = () => {
         />
       </AuthInputContainer>
       <AuthButton onClick={handleClick}>註冊</AuthButton>
-      <AuthLinkText>取消</AuthLinkText>
+      <AuthLinkText onClick={() => navigate('/login')}>取消</AuthLinkText>
     </AuthContainer>
   );
 };

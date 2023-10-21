@@ -7,9 +7,9 @@ import {
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState,useEffect } from 'react';
-import { checkPermission, register } from 'api/auth';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'contexts/AuthContext';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -17,6 +17,8 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+
+  const { register, isAuthenticated } = useAuth(); // 從 useAuth 中取得需要的方法
 
   const handleClick = async () => {
     if (username.length === 0) {
@@ -28,13 +30,12 @@ const SignUpPage = () => {
     if (password.length === 0) {
       return;
     }
-    const { success, authToken } = await register({
+    const success = await register({
       username,
       email,
       password,
     });
     if (success) {
-      localStorage.setItem('authToken', authToken);
       Swal.fire({
         position: 'top',
         title: '註冊成功',
@@ -42,7 +43,6 @@ const SignUpPage = () => {
         showConfirmButton: false,
         timer: 1000,
       });
-      navigate('/todo');
       return;
     }
     Swal.fire({
@@ -55,18 +55,10 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-      if (!authToken) {
-        return;
-      }
-      const result = await checkPermission(authToken);
-      if (result) {
-        navigate('/todo');
-      }
-    };
-    checkTokenIsValid();
-  }, [navigate]);
+    if (isAuthenticated) {
+      navigate('/todo')
+    }
+  }, [navigate,isAuthenticated]);
 
   return (
     <AuthContainer>
